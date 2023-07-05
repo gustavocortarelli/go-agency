@@ -1,6 +1,8 @@
 package configs
 
-import "github.com/spf13/viper"
+import (
+	"github.com/spf13/viper"
+)
 
 var config *appConfig
 
@@ -28,9 +30,11 @@ func init() {
 }
 
 func Load() error {
-	viper.SetConfigName("config")
-	viper.SetConfigType("toml")
+	viper.SetConfigName("app")
+	viper.SetConfigType("env")
 	viper.AddConfigPath(".")
+	viper.AutomaticEnv()
+
 	err := viper.ReadInConfig()
 
 	if err != nil {
@@ -41,14 +45,14 @@ func Load() error {
 
 	config = new(appConfig)
 	config.API = APIConfig{
-		Port: viper.GetString("api.port"),
+		Port: viper.GetString("HTTP_PORT"),
 	}
 	config.DB = DBConfig{
-		Host:     viper.GetString("db.host"),
-		Port:     viper.GetString("db.port"),
-		User:     viper.GetString("db.user"),
-		Password: viper.GetString("db.password"),
-		Database: viper.GetString("db.name"),
+		Host:     viper.GetString("DB_HOST"),
+		Port:     viper.GetString("DB_PORT"),
+		User:     viper.GetString("DB_USER"),
+		Password: viper.GetString("DB_PASSWORD"),
+		Database: viper.GetString("DB_NAME"),
 	}
 
 	return nil

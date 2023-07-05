@@ -1,0 +1,41 @@
+services:
+
+  postgres:
+    build:
+      context: build/postgres/
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "1234" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
+    hostname: postgres
+    networks:
+      - go-project-net
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-1234}
+      - POSTGRES_DB=${POSTGRES_DB_NAME:-postgres}
+    ports:
+      - "5432:5432"
+
+  agency:
+    build:
+      context: .
+    restart: always
+    hostname: agency
+    networks:
+      - go-project-net
+    environment:
+      - HTTP_PORT=9000
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=1234
+      - DB_NAME=postgres
+    ports:
+      - "9000:9000"
+
+networks:
+  go-project-net:
+    name: go-project

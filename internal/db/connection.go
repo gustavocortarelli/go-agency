@@ -1,9 +1,9 @@
 package db
 
 import (
-	"agency/configs"
 	"database/sql"
 	"fmt"
+	"github.com/gustavocortarelli/go-agency/configs"
 	_ "github.com/lib/pq"
 )
 
