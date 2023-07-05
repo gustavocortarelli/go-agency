@@ -1,10 +1,10 @@
 package main
 
 import (
-	"agency/configs"
-	handlers2 "agency/internal/handlers"
 	"fmt"
 	"github.com/go-chi/chi/v5"
+	"github.com/gustavocortarelli/go-agency/configs"
+	handlers2 "github.com/gustavocortarelli/go-agency/internal/handlers"
 	"net/http"
 )
 

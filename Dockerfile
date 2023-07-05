@@ -13,7 +13,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -a -installsuffix cgo -o agency main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -a -installsuffix cgo -o go-agency main.go
 
 FROM build-env as test
 RUN CGO_ENABLED=0 go test -v ./...
@@ -26,4 +26,4 @@ COPY --from=build-env /app /app
 # for microservice test need bash
 RUN apk update && apk add --no-cache bash=5.2.15-r5
 
-CMD ["/app/agency"]
+CMD ["/app/go-agency"]
