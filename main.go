@@ -2,25 +2,46 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-chi/chi/v5"
+	"github.com/gofiber/fiber/v2"
 	"github.com/gustavocortarelli/go-agency/configs"
-	handlers2 "github.com/gustavocortarelli/go-agency/internal/handlers"
-	"net/http"
+	"github.com/gustavocortarelli/go-agency/internal/db"
+	"github.com/gustavocortarelli/go-agency/internal/handlers/address"
+	"github.com/gustavocortarelli/go-agency/internal/handlers/costumer"
+	"github.com/joho/godotenv"
 )
 
-func main() {
-	err := configs.Load()
+func SetupRoutes(app *fiber.App) {
+	api := app.Group("/api")
+	api.Get("/costumer/:id", costumer.Get)
+	api.Get("/costumer", costumer.GetAll)
+	api.Post("/costumer", costumer.Create)
+	api.Put("/costumer/:id", costumer.Update)
+	api.Delete("/costumer/:id", costumer.Delete)
 
+	api.Get("/country", address.GetCountry)
+	api.Get("/city", address.GetCity)
+
+}
+
+func main() {
+
+	err := godotenv.Load(".env")
 	if err != nil {
 		panic(err)
 	}
 
-	router := chi.NewRouter()
-	router.Post("/", handlers2.Create)
-	router.Put("/{id}", handlers2.Update)
-	router.Delete("/{id}", handlers2.Delete)
-	router.Get("/", handlers2.GetAll)
-	router.Get("/{id}", handlers2.Get)
+	err = configs.Load()
+	if err != nil {
+		panic(err)
+	}
 
-	http.ListenAndServe(fmt.Sprintf(":%s", configs.GetApiPort()), router)
+	err = db.OpenConnection()
+	if err != nil {
+		panic(err)
+	}
+
+	app := fiber.New()
+	SetupRoutes(app)
+
+	app.Listen(fmt.Sprintf(":%s", configs.GetApiPort()))
 }
