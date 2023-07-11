@@ -19,18 +19,22 @@ type Repository struct {
 var R Repository
 
 func (r *Repository) GetSession() *gorm.DB {
-	return r.db.Session(&gorm.Session{Logger: r.logger, FullSaveAssociations: true})
+	return r.db.Session(&gorm.Session{
+		Logger:               r.logger,
+		FullSaveAssociations: true,
+		CreateBatchSize:      500,
+	})
 }
 
 func configLogger() logger.Interface {
 	newLogger := logger.New(
-		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
+		log.New(os.Stdout, "\r\n", log.Ldate|log.Ltime|log.Lmicroseconds), // io writer
 		logger.Config{
-			SlowThreshold:             0,           // Slow SQL threshold
+			SlowThreshold:             time.Second, // Slow SQL threshold
 			LogLevel:                  logger.Info, // Log level
 			IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
-			ParameterizedQueries:      true,        // Don't include params in the SQL log
-			Colorful:                  false,       // Disable color
+			ParameterizedQueries:      false,       // Don't include params in the SQL log
+			Colorful:                  true,        // Disable color
 		},
 	)
 	return newLogger

@@ -20,7 +20,7 @@ func SetupRoutes(app *fiber.App) {
 
 	api.Get("/country", address.GetCountry)
 	api.Get("/city", address.GetCity)
-
+	api.Get("/city_country", address.GetCitiesAndCountries)
 }
 
 func main() {
@@ -42,6 +42,9 @@ func main() {
 
 	app := fiber.New()
 	SetupRoutes(app)
+
+	// insert a costumer with addresses X records
+	//utils.GenerateAndInsertData(100000)
 
 	app.Listen(fmt.Sprintf(":%s", configs.GetApiPort()))
 }

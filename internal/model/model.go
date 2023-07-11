@@ -8,10 +8,10 @@ import (
 
 type Costumer struct {
 	ID        int64             `gorm:"primary key;autoIncrement;column:id" json:"id"`
-	Name      *string           `gorm:"column:name" json:"name"`
-	Surname   *string           `gorm:"column:surname" json:"surname"`
-	DocNumber *string           `gorm:"column:doc_number" json:"doc_number"`
-	Birthdate date              `gorm:"column:birthdate" json:"birthdate"`
+	Name      string            `gorm:"column:name" json:"name"`
+	Surname   string            `gorm:"column:surname" json:"surname"`
+	DocNumber string            `gorm:"column:doc_number" json:"doc_number"`
+	Birthdate Date              `gorm:"column:birthdate" json:"birthdate"`
 	Addresses []CostumerAddress `json:"addresses,omitempty"`
 }
 
@@ -20,12 +20,12 @@ func (Costumer) TableName() string {
 }
 
 type CostumerAddress struct {
-	ID         int64   `gorm:"primary key;autoIncrement;column:id" json:"id"`
-	CityID     *int64  `json:"city_id"`
-	CostumerID *int64  `json:"costumer_id"`
-	Address    *string `json:"address"`
-	ZipCode    *string `json:"zip_code"`
-	City       City    `json:"city"`
+	ID         int64  `gorm:"primary key;autoIncrement;column:id" json:"id"`
+	CityID     int64  `json:"city_id"`
+	CostumerID int64  `json:"costumer_id"`
+	Address    string `json:"address"`
+	ZipCode    string `json:"zip_code"`
+	City       City   `json:"city"`
 }
 
 func (CostumerAddress) TableName() string {
@@ -53,33 +53,33 @@ func (City) TableName() string {
 	return "city"
 }
 
-type date time.Time
+type Date time.Time
 
 // UnmarshalJSON Implement Marshaler and Unmarshaler interface
-func (j *date) UnmarshalJSON(b []byte) error {
+func (j *Date) UnmarshalJSON(b []byte) error {
 	s := strings.Trim(string(b), "\"")
 	t, err := time.Parse("2006-01-02", s)
 	if err != nil {
 		return err
 	}
-	*j = date(t)
+	*j = Date(t)
 	return nil
 }
 
-func (j date) MarshalJSON() ([]byte, error) {
+func (j Date) MarshalJSON() ([]byte, error) {
 	return json.Marshal(time.Time(j))
 }
 
 // Format Maybe a Format function for printing your date
-func (j date) Format(s string) string {
+func (j Date) Format(s string) string {
 	t := time.Time(j)
 	return t.Format(s)
 }
 
-func (j date) String() string {
+func (j Date) String() string {
 	return j.Format("2006-01-02")
 }
 
-func (j date) GetDate() string {
+func (j Date) GetDate() string {
 	return j.Format("2006-01-02")
 }

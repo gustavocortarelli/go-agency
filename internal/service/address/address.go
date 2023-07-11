@@ -17,3 +17,16 @@ func GetCityDB() ([]model.City, error) {
 	err := db.R.GetSession().Preload("Country").Find(&cities).Error
 	return cities, err
 }
+
+type CityAndCountry struct {
+	City    string `json:"city""`
+	Country string `json:"country""`
+}
+
+func GetCitiesAndCountries() (any, error) {
+	results, err := db.R.GetSession().
+		Model(model.City{}).InnerJoins("Country").
+		Select("\"Country\".name as country, city.name as city").
+		Rows()
+	return results, err
+}

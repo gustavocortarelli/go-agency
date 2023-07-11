@@ -10,7 +10,7 @@ import (
 )
 
 func Get(context *fiber.Ctx) error {
-
+	log.Printf("Starting get costumer by ID request")
 	id, err := strconv.Atoi(context.Params("id"))
 
 	if err != nil {
@@ -20,16 +20,19 @@ func Get(context *fiber.Ctx) error {
 		})
 		return err
 	}
-
+	log.Printf("Getting costumer data: ID %d...", id)
 	costumerData, err := costumer.Get(int64(id))
+	log.Printf("Data was fetched")
 
 	context.Status(http.StatusOK).JSON(costumerData)
-
+	log.Printf("Get costumer by ID request was done")
 	return nil
 }
 
 func GetAll(context *fiber.Ctx) error {
+	log.Printf("Starting get all costumers request")
 	costumers, err := costumer.GetAll()
+	log.Printf("Data was fetched")
 	if err != nil {
 		log.Printf("Error during get all costumers: %d", err)
 		context.Status(http.StatusInternalServerError).JSON(&fiber.Map{
@@ -38,10 +41,12 @@ func GetAll(context *fiber.Ctx) error {
 		return err
 	}
 	context.Status(http.StatusOK).JSON(costumers)
+	log.Printf("Get all costumers request was done")
 	return nil
 }
 
 func Create(context *fiber.Ctx) error {
+	log.Printf("Starting create costumer request")
 	cost := model.Costumer{}
 	err := context.BodyParser(&cost)
 	if err != nil {
@@ -51,13 +56,16 @@ func Create(context *fiber.Ctx) error {
 		})
 		return err
 	}
-
+	log.Printf("Creating costumer...")
 	cost, err = costumer.Create(cost)
+	log.Printf("Costumer was created")
 	context.Status(http.StatusOK).JSON(cost)
+	log.Printf("Create costumer request was done")
 	return err
 }
 
 func Delete(context *fiber.Ctx) error {
+	log.Printf("Starting delete costumer request")
 	id, err := strconv.Atoi(context.Params("id"))
 
 	if err != nil {
@@ -67,12 +75,16 @@ func Delete(context *fiber.Ctx) error {
 		})
 		return err
 	}
+	log.Printf("Deleting costumer...")
 	err = costumer.Delete(int64(id))
+	log.Printf("Costumer was deleted")
 	context.Status(http.StatusOK).JSON(&fiber.Map{"message": "Costumer was deleted"})
+	log.Printf("Delete costumer request was done")
 	return err
 }
 
 func Update(context *fiber.Ctx) error {
+	log.Printf("Starting update costumer request")
 	id, err := strconv.Atoi(context.Params("id"))
 
 	if err != nil {
@@ -93,7 +105,10 @@ func Update(context *fiber.Ctx) error {
 		return err
 	}
 	cost.ID = int64(id)
+	log.Printf("Updating costumer...")
 	cost, err = costumer.Update(cost)
+	log.Printf("Costumer was updated")
 	context.Status(http.StatusOK).JSON(cost)
+	log.Printf("Update costumer request was done")
 	return err
 }
