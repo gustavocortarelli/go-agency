@@ -1,0 +1,394 @@
+components:
+  schemas:
+    model.City:
+      properties:
+        country:
+          $ref: '#/components/schemas/model.Country'
+        country_id:
+          type: integer
+        id:
+          type: integer
+        name:
+          type: string
+      type: object
+    model.CityAndCountry:
+      properties:
+        city:
+          type: string
+        country:
+          type: string
+      type: object
+    model.Costumer:
+      properties:
+        addresses:
+          items:
+            $ref: '#/components/schemas/model.CostumerAddress'
+          type: array
+          uniqueItems: false
+        birthdate:
+          type: string
+        doc_number:
+          type: string
+        id:
+          type: integer
+        name:
+          type: string
+        surname:
+          type: string
+      type: object
+    model.CostumerAddress:
+      properties:
+        address:
+          type: string
+        city:
+          $ref: '#/components/schemas/model.City'
+        city_id:
+          type: integer
+        costumer_id:
+          type: integer
+        id:
+          type: integer
+        zip_code:
+          type: string
+      type: object
+    model.CostumerData:
+      properties:
+        birthdate:
+          type: string
+        doc_number:
+          type: string
+        id:
+          type: integer
+        name:
+          type: string
+        surname:
+          type: string
+      type: object
+    model.Country:
+      properties:
+        cities:
+          items:
+            $ref: '#/components/schemas/model.City'
+          type: array
+          uniqueItems: false
+        id:
+          type: integer
+        name:
+          type: string
+      type: object
+    model.Error:
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+      type: object
+    model.Success:
+      properties:
+        message:
+          type: string
+      type: object
+externalDocs:
+  description: ""
+  url: ""
+info:
+  contact:
+    name: gustavocortarelli
+    url: https://github.com/gustavocortarelli/
+  description: This is a GO project built to learn the GO language, and test libraries
+    like `GORM` and `SWAGGO`
+  license:
+    name: MIT License
+    url: https://spdx.org/licenses/MIT.html
+  title: GO-Agency Application
+  version: 0.2.1
+openapi: 3.0.2
+paths:
+  /address/city:
+    get:
+      description: Return all cities from database
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/model.City'
+                type: array
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Internal Server Error
+      summary: Get cities
+      tags:
+      - address
+  /address/city_country:
+    get:
+      description: Return city name and country without nested objects
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/model.CityAndCountry'
+                type: array
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Internal Server Error
+      summary: Get city name and country
+      tags:
+      - address
+  /address/country:
+    get:
+      description: Return all countries from database
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/model.Country'
+                type: array
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Internal Server Error
+      summary: Get countries
+      tags:
+      - address
+  /costumer:
+    get:
+      description: Return all costumers that was created on database
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.CostumerData'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Internal Server Error
+      summary: Return all costumers
+      tags:
+      - costumer
+    post:
+      description: Create a costumer record on database
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/model.Costumer'
+        description: Costumer data
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Costumer'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Internal Server Error
+      summary: Create costumer
+      tags:
+      - costumer
+  /costumer/:id:
+    delete:
+      description: Remove costumer data from database by ID
+      parameters:
+      - description: Costumer ID
+        in: query
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Success'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Internal Server Error
+      summary: Remove costumer by ID
+      tags:
+      - costumer
+    get:
+      description: Get costumer
+      parameters:
+      - description: Costumer ID
+        in: query
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Costumer'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Internal Server Error
+      summary: Get costumer by ID
+      tags:
+      - costumer
+    put:
+      description: Remove costumer data from database by ID
+      parameters:
+      - description: Costumer ID
+        in: query
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/model.Costumer'
+        description: Costumer data
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Costumer'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model.Error'
+          description: Internal Server Error
+      summary: Update costumer data by ID
+      tags:
+      - costumer
+servers:
+- url: /api/v1/

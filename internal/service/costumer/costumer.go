@@ -11,7 +11,7 @@ func Get(id int64) (costumer model.Costumer, err error) {
 	return
 }
 
-func GetAll() (costumers []model.Costumer, err error) {
+func GetAll() (costumers []model.CostumerData, err error) {
 	err = db.R.GetSession().Order("id asc").Find(&costumers).Error
 	return costumers, err
 }

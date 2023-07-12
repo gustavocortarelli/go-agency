@@ -10,7 +10,7 @@ insert into costumer (name, surname, doc_number, birthdate) values ('Steven', 'R
 insert into costumer (name, surname, doc_number, birthdate) values ('Diana', 'Prince', '1344414123124', '1941-10-01');
 
 create table country(
-    id integer,
+    id integer primary key,
     name varchar(100)
 );
 

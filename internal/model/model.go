@@ -6,6 +6,18 @@ import (
 	"time"
 )
 
+type CostumerData struct {
+	ID        int64  `gorm:"primary key;autoIncrement;column:id" json:"id"`
+	Name      string `gorm:"column:name" json:"name"`
+	Surname   string `gorm:"column:surname" json:"surname"`
+	DocNumber string `gorm:"column:doc_number" json:"doc_number"`
+	Birthdate Date   `gorm:"column:birthdate" json:"birthdate"`
+}
+
+func (CostumerData) TableName() string {
+	return "costumer"
+}
+
 type Costumer struct {
 	ID        int64             `gorm:"primary key;autoIncrement;column:id" json:"id"`
 	Name      string            `gorm:"column:name" json:"name"`
@@ -51,6 +63,20 @@ type City struct {
 
 func (City) TableName() string {
 	return "city"
+}
+
+type CityAndCountry struct {
+	City    string `json:"city""`
+	Country string `json:"country""`
+}
+
+type Error struct {
+	Message string `json:"message"`
+	Code    int    `json:"code"`
+}
+
+type Success struct {
+	Message string `json:"message"`
 }
 
 type Date time.Time
