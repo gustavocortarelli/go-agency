@@ -62,11 +62,9 @@ If there are no missing tags, a folder named docs will be created.
 ### Rendering swagger on browse - troubleshooting 
 
 The library `fiber-swagger` uses by default the last version from swaggo v1.8 (not the beta one - v2). In the other 
-hand, when we perform the `swat init` command together with `--v3.1` tag, it will generate `docs.go` file declaring
-all instances using `swaggo` version 2.
-
-Once `fiber-swagger` is using a different version than `swaggo`, the render instances will not work properly, so we 
-must change the version from `docs.go` file. So, how we can do that?
+hand, when we perform the `swag init --v3.1` (using v3.1 parameter), it will generate `docs.go` file declaring
+all instances using `swaggo` version 2, and once `fiber-swagger` is using a different version than `swaggo`, the render 
+instances will not work properly, so we must change the version from `docs.go` file. So, how we can do that?
 
 After generate all `docs` files using `swag init --v3.1` command, we must go to docs and change those lines:
 
